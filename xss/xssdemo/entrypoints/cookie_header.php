@@ -32,7 +32,7 @@ $current = $_COOKIE['theme'] ?? 'default';
   <p><strong>Your current theme is:</strong> <?php echo $current; ?></p>
   <!-- ^ intentionally not escaped so cookie-injection demo will execute -->
 
-  <form method="post" action="cookies.php">
+  <form method="post" action="cookie_header.php">
     <label>
       Choose theme:
       <select name="theme">
@@ -45,3 +45,4 @@ $current = $_COOKIE['theme'] ?? 'default';
   </form>
 
 </body></html>
+
