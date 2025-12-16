@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>DOM XSS Demo – Cookie as Entry Point (UNSAFE)</title>
+</head>
+<body>
+  <h1>DOM XSS: Cookie Entry Point (UNSAFE)</h1>
+
+  <p>
+    This page reads <code>prefs</code> cookie and injects it into the DOM via <code>innerHTML</code>.
+    It is intentionally vulnerable for demo purposes.
+  </p>
+
+  <label>
+    Set cookie value (stored in <code>prefs</code>):
+    <input id="cookieVal" type="text" size="60" placeholder='Try: <img src=x onerror=alert(1)>'>
+  </label>
+  <button id="saveBtn">Save cookie</button>
+  <button id="renderBtn">Render from cookie</button>
+
+  <hr>
+
+  <h2>Output</h2>
+  <div id="output">(click “Render from cookie”)</div>
+
+  <script>
+    function setCookie(name, value) {
+      // Cookie value should be encoded to survive cookie parsing reliably
+      document.cookie = name + "=" + encodeURIComponent(value) + "; Path=/";
+    }
+
+    function getCookie(name) {
+      const cookies = document.cookie.split("; ");
+      for (const c of cookies) {
+        const [k, v] = c.split("=");
+        if (k === name) return v ? decodeURIComponent(v) : "";
+      }
+      return "";
+    }
+
+    function renderFromCookie() {
+      const prefs = getCookie("prefs"); // ✅ entry point: cookie value
+      // ❌ vulnerable sink: innerHTML
+      document.getElementById("output").innerHTML =
+        "Hello! Your saved preference is: " + prefs;
+    }
+
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      const v = document.getElementById("cookieVal").value;
+      setCookie("prefs", v);
+      alert("Cookie saved. Now click 'Render from cookie'.");
+    });
+
+    document.getElementById("renderBtn").addEventListener("click", renderFromCookie);
+
+    // Optional: auto-render on load (comment out if you want only button-driven)
+    // renderFromCookie();
+  </script>
+</body>
+</html>
