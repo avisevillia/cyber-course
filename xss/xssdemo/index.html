@@ -1,71 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>XSS Entry Points – Index</title>        
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px auto; 
-            line-height: 1.6;
-            max-width: 900px;
-        }
-        h1, h2 {
-            margin-top: 30px;
-        }
-        ul {
-            margin-left: 20px;
-        }
-        a {
-            text-decoration: none;
-            color: #0073e6;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>XSS Entry Points – Index</title>
+  <style>
+    :root{
+      --bg: #0b1220;
+      --panel: rgba(255,255,255,.06);
+      --panel-2: rgba(255,255,255,.09);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.7);
+      --border: rgba(255,255,255,.12);
+      --accent: #7dd3fc;   /* sky */
+      --accent-2: #a78bfa; /* violet */
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body{
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(125,211,252,.25), transparent 60%),
+        radial-gradient(1000px 700px at 100% 0%, rgba(167,139,250,.20), transparent 55%),
+        radial-gradient(900px 700px at 40% 110%, rgba(34,211,238,.12), transparent 55%),
+        var(--bg);
+      line-height: 1.6;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 44px 18px 64px;
+    }
+
+    header{
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .title{
+      margin: 0;
+      font-size: clamp(28px, 3.2vw, 40px);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .subtitle{
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 70ch;
+      font-size: 15px;
+    }
+
+    .pill{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .grid{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    @media (min-width: 900px){
+      .grid{ grid-template-columns: 1fr 1fr; }
+    }
+
+    .card{
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card .card-hd{
+      padding: 16px 18px 12px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+    }
+
+    h2{
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+    }
+
+    .hint{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .sections{
+      padding: 14px 18px 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    h3{
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: rgba(255,255,255,.86);
+      letter-spacing: .02em;
+      text-transform: uppercase;
+    }
+
+    ul{
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    li{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      border-radius: 12px;
+    }
+
+    .links{
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    a{
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: transform .12s ease, border-color .12s ease, color .12s ease, background .12s ease;
+      border-radius: 6px;
+      padding: 2px 4px;
+    }
+
+    a:hover{
+      border-color: rgba(125,211,252,.55);
+      background: rgba(125,211,252,.10);
+    }
+
+    a:focus-visible{
+      outline: 2px solid rgba(125,211,252,.75);
+      outline-offset: 2px;
+    }
+
+    .tag{
+      font-size: 12px;
+      color: rgba(255,255,255,.65);
+      padding: 4px 8px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 999px;
+      background: rgba(255,255,255,.04);
+    }
+
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      color: rgba(255,255,255,.68);
+    }
+
+    footer{
+      margin-top: 18px;
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+      text-align: center;
+    }
+  </style>
 </head>
+
 <body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1 class="title">XSS Entry Points</h1>
+        <p class="subtitle">
+          An index of common server-side (stored/reflected) and client-side (DOM-based) entry points.
+        </p>
+      </div>
+      <div class="pill">
+        <span aria-hidden="true">✨</span>
+        <span class="mono">index.html</span>
+      </div>
+    </header>
 
-    <h1>Server Side Entry Points (Stored/Reflected XSS)</h1>
+    <div class="grid">
+      <!-- Server Side -->
+      <section class="card">
+        <div class="card-hd">
+          <h2>Server Side Entry Points</h2>
+          <p class="hint">Stored / Reflected</p>
+        </div>
 
-    <h2>HTTP Request</h2>
+        <div class="sections">
+          <div>
+            <h3>HTTP Request · Request Line</h3>
+            <ul>
+              <li>
+                <span class="links"><a href="entrypoints/querystring.php">Query string</a></span>
+                <span class="tag">GET</span>
+              </li>
+              <li>
+                <span class="links"><a href="entrypoints/urlpath.php">Path Info</a></span>
+                <span class="tag">URL</span>
+              </li>
+              <li>
+                <span class="links"><a href="entrypoints/echo_uri.php">Echoing URI</a></span>
+                <span class="tag">URI</span>
+              </li>
+            </ul>
+          </div>
 
-    <h3>Request Line</h3>
-    <ul>
-        <li><a href="entrypoints/querystring.php">Query string</a></li>
-        <li><a href="entrypoints/urlpath.php">Path Info</a></li>
-        <li><a href="entrypoints/echo_uri.php">Echoing URI</a></li>
-    </ul>
+          <div>
+            <h3>HTTP Request · Headers</h3>
+            <ul>
+              <li>
+                <span class="links"><a href="entrypoints/useragent_header.php">User-Agent Header</a></span>
+                <span class="tag">Header</span>
+              </li>
+              <li>
+                <span class="links"><a href="entrypoints/cookie_header.php">Cookie Header</a></span>
+                <span class="tag">Header</span>
+              </li>
+              <li>
+                <span class="links">
+                  <a href="entrypoints/referer_header.php">Referer Header</a>
+                  <a href="entrypoints/referer_header_attack.html">Attack</a>
+                </span>
+                <span class="tag">Header</span>
+              </li>
+            </ul>
+          </div>
 
-    <h3>Headers</h3>
-    <ul>
-        <li><a href="entrypoints/useragent_header.php">User-Agent Header</a></li>
-        <li><a href="entrypoints/cookie_header.php">Cookie Header</a></li>
-        <li><a href="entrypoints/referer_header.php">Referer Header</a>(<a href="entrypoints/referer_header_attack.html">Referer Header Attack</a>)</li>
-    </ul>
+          <div>
+            <h3>HTTP Request · Body</h3>
+            <ul>
+              <li>
+                <span class="links"><a href="entrypoints/post.php">Form Fields (Text Inputs)</a></span>
+                <span class="tag">POST</span>
+              </li>
+              <li>
+                <span class="links"><a href="entrypoints/upload_file.php">Files</a></span>
+                <span class="tag">Upload</span>
+              </li>
+            </ul>
+          </div>
 
-    <h3>Body</h3>
-    <ul>
-        <li><a href="entrypoints/post.php">Form Fields (Text Inputs)</a></li>
-        <li><a href="entrypoints/upload_file.php">Files</a></li>
-    </ul>
+          <div>
+            <h3>Third-party Content</h3>
+            <ul>
+              <li>
+                <span class="links"><a href="entrypoints/feed.php">feed.php</a></span>
+                <span class="tag">External</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
-    <h2>Third-party Content</h2>
-    <ul>
-        <li><a href="entrypoints/feed.php">feed.php</a></li>
-    </ul>
+      <!-- Client Side -->
+      <section class="card">
+        <div class="card-hd">
+          <h2>Client Side Entry Points</h2>
+          <p class="hint">DOM-based</p>
+        </div>
 
-    <h1>Client Side Entry Points (DOM-Based XSS)</h1>
-    <ul>
-        <li><a href="entrypoints/dombased/form_fields.html">Form Fields (document.getElementById)</a></li>
-        <li><a href="entrypoints/dombased/location.html">location.search, location.hash, location.pathname</a><br/>(<a href="entrypoints/dombased/location_hash.html">location.hash - another example</a>)</li>
-        <li><a href="entrypoints/dombased/localstorage.html">localStorage</a> (<a href="entrypoints/dombased/localstorageattack.html">localStorage Attack Page</a>)</li>
-        <li><a href="entrypoints/dombased/sessionstorage.html">sessionStorage</a></li>
-        <li><a href="entrypoints/dombased/cookies.html">document.cookie</a></li>
-        <li><a href="entrypoints/dombased/referrer.html">document.referrer</a> (<a href="entrypoints/dombased/referrerattack.html">Attack Page</a>)</li>
-    </ul>    
+        <div class="sections">
+          <div>
+            <h3>DOM Sources</h3>
+            <ul>
+              <li>
+                <span class="links">
+                  <a href="entrypoints/dombased/form_fields.html">Form Fields (document.getElementById)</a>
+                </span>
+                <span class="tag">DOM</span>
+              </li>
+              <li>
+                <span class="links">
+                  <a href="entrypoints/dombased/location.html">location.search / hash / pathname</a>
+                  <a href="entrypoints/dombased/location_hash.html">Alt example</a>
+                </span>
+                <span class="tag">location</span>
+              </li>
+              <li>
+                <span class="links">
+                  <a href="entrypoints/dombased/localstorage.html">localStorage</a>
+                  <a href="entrypoints/dombased/localstorageattack.html">Attack</a>
+                </span>
+                <span class="tag">Storage</span>
+              </li>
+              <li>
+                <span class="links"><a href="entrypoints/dombased/sessionstorage.html">sessionStorage</a></span>
+                <span class="tag">Storage</span>
+              </li>
+              <li>
+                <span class="links"><a href="entrypoints/dombased/indexeddb.html">IndexedDB</a></span>
+                <span class="tag">Storage</span>
+              </li>
+              <li>
+                <span class="links"><a href="entrypoints/dombased/cookies.html">document.cookie</a></span>
+                <span class="tag">Cookie</span>
+              </li>
+              <li>
+                <span class="links">
+                  <a href="entrypoints/dombased/referrer.html">document.referrer</a>
+                  <a href="entrypoints/dombased/referrerattack.html">Attack</a>
+                </span>
+                <span class="tag">Referrer</span>
+              </li>
+              <li>
+                <span class="links"><a href="entrypoints/dombased/window_name.html">window.name</a></span>
+                <span class="tag">Cookie</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
 
+    <footer>
+      Tip: links have keyboard focus styling — try tabbing through.
+    </footer>
+  </div>
 </body>
 </html>
-
