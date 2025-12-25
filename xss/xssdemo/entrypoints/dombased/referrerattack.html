@@ -22,7 +22,7 @@
     <h3>1) Safe link (regular referrer)</h3>
     <p>Clicking this sends a normal referrer (the current attacker page URL).</p>
     <!-- Regular link - does not change attacker URL -->
-    <a id="safeLink" href="http://xssdemo/entrypoints/referrer.html" target="_blank">Go to Victim (safe)</a>
+    <a id="safeLink" href="/entrypoints/dombased/referrer.html" target="_blank">Go to Victim (safe)</a>
   </div>
 
   <div class="box">
@@ -41,7 +41,7 @@
 
   <script>
     // payload that we will place into the attacker's URL
-    const payload = 'AAA<img src="aaa.jpg"  onerror=alert(1) />BBB';
+    const payload = 'AAA<img src=x onerror=alert(1) />BBB';
 
     function doUnsafe(e) {
       e.preventDefault();
@@ -59,7 +59,7 @@
       history.replaceState(null, '', newUrl);
 
       // now navigate to victim; the browser will send the current attacker URL as the Referer header
-      window.location.href = 'http://xssdemo/entrypoints/referrer.html';
+      window.location.href = '/entrypoints/dombased/referrer.html';
     }
 
     // Optional: demonstrate an auto-click helper for teachers (uncomment to auto-redirect)

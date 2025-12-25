@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>DOM XSS Demo – window.name Entry Point (UNSAFE)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 12px; }
+    code { background: #f3f3f3; padding: 2px 6px; border-radius: 6px; }
+    .out { padding: 12px; background: #fff7d6; border-radius: 10px; min-height: 2.5em; }
+  </style>
+</head>
+<body>
+  <h1>DOM-based XSS: <code>window.name</code> Entry Point (UNSAFE)</h1>
+
+  <p>
+    <code>window.name</code> is a browser-provided string attached to a tab/window.
+    It can persist across navigations within the same tab. This page demonstrates why
+    treating it as “trusted” is dangerous.
+  </p>
+
+  <label>
+    Set <code>window.name</code> to:
+    <input id="nameInput" type="text" size="70" placeholder='Try: <img src=x onerror=alert(1)>' />
+  </label>
+  <button id="setBtn">Set window.name</button>
+  <button id="renderBtn">Render from window.name (vulnerable)</button>
+  <button id="clearBtn">Clear window.name</button>
+
+  <hr>
+
+  <h2>Output</h2>
+  <div id="output" class="out">(click “Render from window.name”)</div>
+
+  <script>
+    /**********************************************************************
+     * BEGINNER NOTES: What is window.name?
+     *
+     * - window.name is a string property on the browser window/tab.
+     * - It is often used to give a window a "name" (historically for targeting
+     *   links/forms), but developers sometimes misuse it as temporary storage.
+     * - It can persist even when you navigate to a different page in the same tab.
+     *
+     * SECURITY PROBLEM:
+     * - If your page reads window.name and injects it into the page using
+     *   innerHTML, an attacker can set window.name to HTML and it will be
+     *   interpreted as markup when rendered.
+     **********************************************************************/
+
+    function setWindowName() {
+      // Read the user's input from the text field.
+      const v = document.getElementById("nameInput").value;
+
+      // ✅ Entry point: we are writing attacker-controlled data into window.name.
+      // In a real attack, the attacker might set window.name from another page
+      // (e.g., by getting the victim to open a link in the same tab), but for a
+      // demo we provide a button.
+      window.name = v;
+
+      alert("window.name set. Now click “Render from window.name (vulnerable)”.");
+    }
+
+    function renderFromWindowNameVulnerable() {
+      // ✅ Entry point: data is coming FROM window.name (untrusted input!)
+      const data = window.name || "";
+
+      // ❌ Vulnerable sink: innerHTML interprets the string as HTML.
+      // If data contains HTML (e.g. <b>hi</b>) it will be rendered as HTML.
+      // If data contains elements with event handlers, those can execute.
+      document.getElementById("output").innerHTML =
+        "Loaded from <code>window.name</code>: " + data;
+    }
+
+    function clearWindowName() {
+      // Reset window.name to an empty string.
+      window.name = "";
+      document.getElementById("output").textContent = "(cleared)";
+    }
+
+    // Wire up buttons
+    document.getElementById("setBtn").addEventListener("click", setWindowName);
+    document.getElementById("renderBtn").addEventListener("click", renderFromWindowNameVulnerable);
+    document.getElementById("clearBtn").addEventListener("click", clearWindowName);
+
+    // Optional: show the current window.name on load (safe display)
+    // This uses textContent, which does NOT interpret HTML.
+    // document.getElementById("output").textContent = "Current window.name (safe): " + (window.name || "");
+  </script>
+</body>
+</html>

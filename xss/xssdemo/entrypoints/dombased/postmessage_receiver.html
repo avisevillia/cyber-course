@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>DOM XSS Demo – postMessage Receiver (UNSAFE)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 12px; }
+    code { background: #f3f3f3; padding: 2px 6px; border-radius: 6px; }
+    .out { padding: 12px; background: #fff7d6; border-radius: 10px; min-height: 2.5em; }
+  </style>
+</head>
+<body>
+  <h1>Receiver (Victim): DOM XSS via <code>window.postMessage</code></h1>
+
+  <p>
+    This page listens for <code>message</code> events.
+    It intentionally demonstrates a vulnerability by placing the received data into the DOM using
+    <code>innerHTML</code>.
+  </p>
+
+  <h2>Output</h2>
+  <div id="output" class="out">(waiting for postMessage...)</div>
+
+  <script>
+    /**********************************************************************
+     * BEGINNER NOTES: What is postMessage?
+     *
+     * - window.postMessage lets one window communicate with another:
+     *     * a page ↔ an iframe
+     *     * a page ↔ a popup
+     *     * different origins (domains) are allowed to send messages
+     *
+     * - The receiving page gets an event called "message":
+     *     window.addEventListener("message", (event) => { ... })
+     *
+     * IMPORTANT SECURITY RULES:
+     * 1) Always check event.origin (who sent the message)
+     * 2) Treat event.data as UNTRUSTED input (like URL params)
+     * 3) Never put event.data into innerHTML (XSS sink)
+     **********************************************************************/
+
+    window.addEventListener("message", (event) => {
+      // ---------------------------------------------------------------
+      // ✅ WHO SENT THIS MESSAGE? (Origin check)
+      // ---------------------------------------------------------------
+      // event.origin is something like: "https://example.com"
+      //
+      // In real secure code, you'd do something like:
+      //
+      //   if (event.origin !== "https://trusted-sender.example") return;
+      //
+      // For this demo, we intentionally DO NOT enforce this check
+      // to show how DOM XSS happens when developers trust messages.
+
+      // ---------------------------------------------------------------
+      // ✅ WHAT DID THEY SEND? (Entry point)
+      // ---------------------------------------------------------------
+      // event.data can be ANYTHING the sender chooses (string/object).
+      // We'll assume it's a string for simplicity.
+      const message = String(event.data);
+
+      // ---------------------------------------------------------------
+      // ❌ VULNERABLE SINK: innerHTML
+      // ---------------------------------------------------------------
+      // innerHTML interprets the string as HTML.
+      // If the message contains markup, it will be parsed as elements.
+      // That’s the DOM-based XSS risk.
+      document.getElementById("output").innerHTML =
+        "Received message from <code>" + event.origin + "</code>: " + message;
+
+      // If you want to show the SAFE way, use textContent instead:
+      // document.getElementById("output").textContent =
+      //   `Received message from ${event.origin}: ${message}`;
+    });
+  </script>
+</body>
+</html>

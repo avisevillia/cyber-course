@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>DOM XSS Demo – API returns JSON array from local file</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 12px; }
+    button { margin-top: 10px; }
+    code { background:#f3f3f3; padding:2px 6px; border-radius:6px; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 12px; margin: 12px 0; }
+    .title { font-weight: 700; font-size: 1.1em; }
+    .author { color: #555; margin-bottom: 6px; }
+    .msg { background: #fff7d6; padding: 10px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+  <h1>DOM-based XSS Demo: API JSON array → <code>innerHTML</code></h1>
+
+  <p>
+    This page fetches a JSON array from a same-origin API (<code>api_feed.php</code>).
+    The API reads the array from a local file (<code>feed.json</code>), which you can edit
+    to simulate “stored attacker content”.
+  </p>
+
+  <p>
+    ✅ Entry point: <code>fetch("api_feed.php")</code><br>
+    ❌ Sink: rendering API data with <code>innerHTML</code>
+  </p>
+
+  <button id="loadBtn">Load feed from API and render (vulnerable)</button>
+
+  <hr>
+
+  <div id="feedArea"></div>
+
+  <script>
+    /**********************************************************************
+     * BEGINNER NOTES
+     *
+     * 1) We fetch an API endpoint that returns JSON ARRAY:
+     *      [
+     *        { "title": "...", "author": "...", "message": "..." },
+     *        { ... }
+     *      ]
+     *
+     * 2) This API is same-origin. Many developers assume:
+     *      "Same origin = safe"
+     *
+     * 3) But the API data can come from untrusted sources:
+     *      - a CMS
+     *      - a database entry
+     *      - a log ingestion pipeline
+     *      - a local file (like this demo!)
+     *
+     * 4) If you use innerHTML to insert "message",
+     *    the browser will treat it as HTML, causing DOM-based XSS.
+     **********************************************************************/
+
+    async function loadAndRenderVulnerable() {
+      // ---------------------------------------------------------------
+      // ✅ ENTRY POINT: Data returned from same-origin API
+      // ---------------------------------------------------------------
+      const res = await fetch("api_feed.php");
+      const posts = await res.json(); // "posts" is an ARRAY
+
+      // Clear previous output
+      const area = document.getElementById("feedArea");
+      area.innerHTML = "";
+
+      // Loop through all posts in the array
+      posts.forEach((post, i) => {
+        // Extract fields
+        const title = post.title ?? "(no title)";
+        const author = post.author ?? "(unknown author)";
+        const message = post.message ?? "";
+
+        // ---------------------------------------------------------------
+        // ❌ SINK: innerHTML used to build HTML including message
+        // ---------------------------------------------------------------
+        // The message field is untrusted and comes from the API.
+        // If message contains HTML, it will be interpreted.
+        // That is the DOM XSS vulnerability.
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML =
+          "<div class='title'>Post #" + (i + 1) + ": " + title + "</div>" +
+          "<div class='author'>By: " + author + "</div>" +
+          "<div class='msg'>" + message + "</div>";
+
+        area.appendChild(card);
+      });
+
+      // SAFE alternative (for later teaching):
+      // Instead of innerHTML, use textContent for message.
+    }
+
+    document.getElementById("loadBtn").addEventListener("click", loadAndRenderVulnerable);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>DOM XSS Demo – IndexedDB as Entry Point (UNSAFE)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 12px; }
+    code { background: #f3f3f3; padding: 2px 6px; border-radius: 6px; }
+    .out { padding: 12px; background: #fff7d6; border-radius: 10px; min-height: 2.5em; }
+  </style>
+</head>
+<body>
+  <h1>DOM-based XSS: IndexedDB Entry Point</h1>
+
+  <p>
+    This page intentionally demonstrates a DOM-based XSS vulnerability where
+    untrusted data is stored in IndexedDB and later rendered using <code>innerHTML</code>.
+  </p>
+
+  <input id="profileInput" type="text" size="70"
+         placeholder='Try: <img src=x onerror=alert(1)>' />
+  <button id="saveBtn">Save to IndexedDB</button>
+  <button id="loadBtn">Load & Render (vulnerable)</button>
+
+  <hr>
+  <div id="output">(output)</div>
+  <br/><br/>
+  <hr>
+  <p>You can also inject the payload using the browser console (Copy-Paste it):</p>
+  <pre>
+    indexedDB.open("xss_demo_db",1).onsuccess=e=&gt;{
+      const d=e.target.result,
+            t=d.transaction("settings","readwrite");
+      t.objectStore("settings")
+       .put("&lt;img src=x onerror=alert(1)&gt;","profile")
+    }
+  </pre>
+  
+    
+
+  <script>
+    /******************************************************************
+     * IndexedDB BASIC CONCEPTS
+     *
+     * IndexedDB is a client-side NoSQL database built into the browser.
+     * Data persists across page reloads and browser restarts.
+     *
+     * Hierarchy:
+     *   Database (DB_NAME)
+     *     └── Object Store (STORE)
+     *           └── Key → Value
+     ******************************************************************/
+
+    // ---------------------------------------------------------------
+    // DATABASE NAME
+    // ---------------------------------------------------------------
+    // Think of this as the "database file name".
+    // Each origin (scheme + host + port) has its own IndexedDB namespace.
+    //
+    // Changing this name creates a completely NEW database.
+    const DB_NAME = "xss_demo_db";
+
+    // ---------------------------------------------------------------
+    // OBJECT STORE NAME
+    // ---------------------------------------------------------------
+    // An object store is similar to a table in SQL databases.
+    // It holds multiple records (key → value pairs).
+    //
+    // A database can have MANY object stores.
+    const STORE = "settings";
+
+    // ---------------------------------------------------------------
+    // RECORD KEY
+    // ---------------------------------------------------------------
+    // This is the identifier used to store/retrieve a value
+    // from the object store.
+    //
+    // Here we use a FIXED key, meaning:
+    //   settings["profile"] = <user input>
+    //
+    // This simulates storing a single user preference.
+    const KEY = "profile";
+
+    // ---------------------------------------------------------------
+    // OPEN (OR CREATE) THE DATABASE
+    // ---------------------------------------------------------------
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        // indexedDB.open() opens an existing DB or creates it if missing
+        // The second argument is the DB VERSION
+        const request = indexedDB.open(DB_NAME, 1);
+
+        // This event fires ONLY when:
+        //   - The database does not exist yet, OR
+        //   - The version number increases
+        request.onupgradeneeded = () => {
+          const db = request.result;
+
+          // Create the object store if it does not exist
+          if (!db.objectStoreNames.contains(STORE)) {
+            db.createObjectStore(STORE);
+          }
+        };
+
+        request.onsuccess = () => {
+          // Database is ready for use
+          resolve(request.result);
+        };
+
+        request.onerror = () => {
+          reject(request.error);
+        };
+      });
+    }
+
+    // ---------------------------------------------------------------
+    // SAVE USER INPUT INTO INDEXEDDB
+    // ---------------------------------------------------------------
+    async function saveProfile(value) {
+      const db = await openDB();
+
+      // Transactions define what we can do:
+      //   "readonly"   → read only
+      //   "readwrite"  → read + write
+      const tx = db.transaction(STORE, "readwrite");
+
+      // Object store reference
+      const store = tx.objectStore(STORE);
+
+      // Store the value under a fixed key
+      // IMPORTANT:
+      //   We are storing UNTRUSTED USER INPUT here.
+      store.put(value, KEY);
+
+      // Clean up
+      tx.oncomplete = () => db.close();
+    }
+
+    // ---------------------------------------------------------------
+    // LOAD DATA FROM INDEXEDDB
+    // ---------------------------------------------------------------
+    async function loadProfile() {
+      const db = await openDB();
+      const tx = db.transaction(STORE, "readonly");
+      const store = tx.objectStore(STORE);
+
+      return new Promise((resolve, reject) => {
+        // Read the value associated with KEY
+        const request = store.get(KEY);
+
+        request.onsuccess = () => {
+          // If nothing was stored yet, return empty string
+          resolve(request.result ?? "");
+          db.close();
+        };
+
+        request.onerror = () => {
+          reject(request.error);
+          db.close();
+        };
+      });
+    }
+
+    // ---------------------------------------------------------------
+    // VULNERABLE RENDER FUNCTION (DOM XSS)
+    // ---------------------------------------------------------------
+    function loadAndRenderVulnerable() {
+      loadProfile().then(profileValue => {
+
+        // -----------------------------------------------------------
+        // 🚨 XSS ENTRY POINT
+        // -----------------------------------------------------------
+        // Data coming from IndexedDB is treated as TRUSTED,
+        // but it is actually attacker-controlled.
+        const attackerControlledData = profileValue;
+
+        // -----------------------------------------------------------
+        // 🚨 XSS SINK
+        // -----------------------------------------------------------
+        // innerHTML interprets the string as HTML,
+        // allowing event handlers, SVG, etc. to execute.
+        document.getElementById("output").innerHTML =
+          "Loaded profile from IndexedDB: " + attackerControlledData;
+      });
+    }
+
+    // ---------------------------------------------------------------
+    // UI WIRING
+    // ---------------------------------------------------------------
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      const value = document.getElementById("profileInput").value;
+      saveProfile(value);
+      alert("Saved. Now click 'Load & Render (vulnerable)'.");
+    });
+
+    document.getElementById("loadBtn").addEventListener("click", loadAndRenderVulnerable);
+  </script>
+</body>
+</html>
