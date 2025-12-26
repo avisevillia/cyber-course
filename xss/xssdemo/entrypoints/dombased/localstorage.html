@@ -1,11 +1,22 @@
-<?php
-// Simple page that reads localStorage via client JS and injects into innerHTML (vulnerable)
-?>
 <!doctype html>
-<html>
-<head><meta charset="utf-8"><title>localStorage XSS Demo (VULN)</title></head>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Localstorage</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
+</head>
 <body>
-  <h1>Welcome to localStorage XSS demo</h1>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="brand-badge">XSS</div><div>Localstorage</div></div>
+      <div class="nav"><a class="pill" href="/index.html">← Back to index</a></div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hero"><h1>Localstorage</h1></div>
+    <div class="card">
+      <h1>Welcome to localStorage XSS demo</h1>
   <p>Stored name will be shown below (UNSAFE):</p>
   <div id="display" style="border:1px solid #ccc;padding:12px;border-radius:6px;"></div>
 
@@ -15,5 +26,8 @@
     document.getElementById('display').innerHTML =
       '<strong>Name:</strong> ' + name; // <-- vulnerable sink (innerHTML)
   </script>
+    </div>
+    <div class="footer">cyber-course</div>
+  </div>
 </body>
 </html>

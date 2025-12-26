@@ -21,9 +21,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $current = $_COOKIE['theme'] ?? 'default';
 ?>
 <!doctype html>
-<html><head><meta charset="utf-8"><title>cookies.php (simple)</title></head>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Cookie Header</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
+</head>
 <body>
-  <h1>Theme demo (simple)</h1>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-badge">XSS</div>
+        <div>Cookie Header</div>
+      </div>
+      <div class="nav">
+        <a class="pill" href="/index.html">← Back to index</a>
+      </div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hero">
+      <h1>Cookie Header</h1></div>
+    <div class="card">
+      <h1>Theme demo (simple)</h1>
 
   <?php if (!empty($msg)): ?>
     <p><em><?php echo htmlspecialchars($msg, ENT_QUOTES, 'UTF-8'); ?></em></p>
@@ -43,6 +64,8 @@ $current = $_COOKIE['theme'] ?? 'default';
     </label>
     <button type="submit">Change</button>
   </form>
-
-</body></html>
-
+    </div>
+    <div class="footer">cyber-course</div>
+  </div>
+</body>
+</html>

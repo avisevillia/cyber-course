@@ -1,19 +1,25 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Attacker page (safe vs unsafe referrer)</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 24px; max-width: 800px; }
-    .box { border: 1px solid #ddd; padding: 12px; border-radius: 6px; margin-top: 12px; }
-    button, a { margin-right: 12px; }
-  </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Referrerattack</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
 </head>
 <body>
-  <h1>Attacker page — Safe vs Unsafe referrer demo</h1>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="brand-badge">XSS</div><div>Referrerattack</div></div>
+      <div class="nav"><a class="pill" href="/index.html">← Back to index</a></div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hero"><h1>Referrerattack</h1></div>
+    <div class="card">
+      <h1>Attacker page — Safe vs Unsafe referrer demo</h1>
 
   <p>
-    Below are two ways to navigate to the victim page. The victim (http://xssdemo/entrypoints/referrer.html)
+    Below are two ways to navigate to the victim page. The victim (referrer.html)
     will receive the attacker page URL as the referrer. The <strong>unsafe</strong> link first
     injects a payload into the attacker's URL, so the referrer contains that payload.
   </p>
@@ -65,6 +71,8 @@
     // Optional: demonstrate an auto-click helper for teachers (uncomment to auto-redirect)
     // window.addEventListener('load', () => document.getElementById('unsafeLink').click());
   </script>
+    </div>
+    <div class="footer">cyber-course</div>
+  </div>
 </body>
 </html>
-

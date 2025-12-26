@@ -1,8 +1,22 @@
 <!doctype html>
-<html>
-<head><meta charset="utf-8"><title>Victim: document.referrer XSS demo</title></head>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Referrer</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
+</head>
 <body>
-  <h1>Victim page (vulnerable)</h1>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="brand-badge">XSS</div><div>Referrer</div></div>
+      <div class="nav"><a class="pill" href="/index.html">← Back to index</a></div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hero"><h1>Referrer</h1></div>
+    <div class="card">
+      <h1>Victim page (vulnerable)</h1>
   <p>This page will display the referrer below (unsafely).</p>
 
   <div id="refbox" style="border:1px solid #ccc;padding:12px;border-radius:6px;"></div>
@@ -13,5 +27,8 @@
     const ref = decodeURIComponent(document.referrer) || 'none';
     document.getElementById('refbox').innerHTML = 'Referrer: ' + ref;
   </script>
+    </div>
+    <div class="footer">cyber-course</div>
+  </div>
 </body>
 </html>

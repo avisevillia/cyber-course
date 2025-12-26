@@ -1,12 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>DOM-Based XSS Demo – Unsafe innerHTML</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Form Fields</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
 </head>
 <body>
-
-  <h1>DOM-Based XSS Demonstration</h1>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="brand-badge">XSS</div><div>Form Fields</div></div>
+      <div class="nav"><a class="pill" href="/index.html">← Back to index</a></div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hero"><h1>Form Fields</h1></div>
+    <div class="card">
+      <h1>DOM-Based XSS Demonstration</h1>
 
   <label>
     Name:
@@ -59,6 +69,8 @@
         "Your favorite sentence is: " + sentence;
     }
   </script>
-
+    </div>
+    <div class="footer">cyber-course</div>
+  </div>
 </body>
 </html>
