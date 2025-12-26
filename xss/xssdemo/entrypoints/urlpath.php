@@ -8,10 +8,31 @@ $name = ltrim($_SERVER['PATH_INFO'] ?? '/', '/'); // e.g. "john.doe"
 $script = $_SERVER['SCRIPT_NAME'];
 $self = htmlspecialchars($script, ENT_QUOTES, 'UTF-8');
 ?>
-
-<html>
-  <body>
-    <h1>Profile: <?php echo $name; ?></h1> <!-- vulnerable: echoes raw PATH_INFO -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Urlpath</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-badge">XSS</div>
+        <div>Urlpath</div>
+      </div>
+      <div class="nav">
+        <a class="pill" href="/index.html">← Back to index</a>
+      </div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hero">
+      <h1>Urlpath</h1></div>
+    <div class="card">
+      <h1>Profile: <?php echo $name; ?></h1> <!-- vulnerable: echoes raw PATH_INFO -->
 
       <!-- link to this same file with different PATH_INFO values -->
     <a href="<?php echo $self; ?>/alice">Alice</a>
@@ -40,8 +61,9 @@ $self = htmlspecialchars($script, ENT_QUOTES, 'UTF-8');
         // navigate to the canonical profile URL
         window.location.href = target;
       }
-  </script>    
-
-  </body>
+  </script>
+    </div>
+    <div class="footer">cyber-course</div>
+  </div>
+</body>
 </html>
-

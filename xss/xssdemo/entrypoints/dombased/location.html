@@ -1,17 +1,22 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>DOM XSS Demo – location.search / hash / pathname (UNSAFE)</title>
-  <style>
-    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 12px; }
-    code { background: #f3f3f3; padding: 2px 6px; border-radius: 6px; }
-    .box { border: 1px solid #ddd; border-radius: 10px; padding: 12px; margin: 12px 0; }
-    .out { padding: 10px; background: #fff7d6; border-radius: 10px; min-height: 2.5em; }
-  </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Location</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
 </head>
 <body>
-  <h1>DOM-based XSS entry points: <code>location.search</code>, <code>location.hash</code>, <code>location.pathname</code></h1>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="brand-badge">XSS</div><div>Location</div></div>
+      <div class="nav"><a class="pill" href="/index.html">← Back to index</a></div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hero"><h1>Location</h1></div>
+    <div class="card">
+      <h1>DOM-based XSS entry points: <code>location.search</code>, <code>location.hash</code>, <code>location.pathname</code></h1>
   <p>This page is intentionally <b>vulnerable</b> for demonstration. It takes data from the URL and writes it to the DOM using <code>innerHTML</code>.</p>
 
   <div class="box">
@@ -80,5 +85,8 @@
     render();
     window.addEventListener("hashchange", render);
   </script>
+    </div>
+    <div class="footer">cyber-course</div>
+  </div>
 </body>
 </html>

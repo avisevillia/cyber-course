@@ -1,17 +1,22 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Vulnerable Customer Profile SPA</title>
-  <style>
-    body { font-family: sans-serif; max-width: 800px; margin: 24px; }
-    nav a { margin-right: 12px; }
-    .tabs { margin-top: 16px; }
-    .card { border: 1px solid #ddd; padding: 12px; border-radius: 6px; margin-top: 8px; }
-  </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Location Hash</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
 </head>
 <body>
-  <h1>Customer Profile (VULNERABLE DEMO)</h1>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="brand-badge">XSS</div><div>Location Hash</div></div>
+      <div class="nav"><a class="pill" href="/index.html">← Back to index</a></div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hero"><h1>Location Hash</h1></div>
+    <div class="card">
+      <h1>Customer Profile (VULNERABLE DEMO)</h1>
 
   <nav>
     <!-- base navigation -->
@@ -71,5 +76,8 @@
     window.addEventListener('hashchange', route);
     window.addEventListener('load', route);
   </script>
+    </div>
+    <div class="footer">cyber-course</div>
+  </div>
 </body>
 </html>

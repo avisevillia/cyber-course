@@ -1,17 +1,28 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Victim Demo (PHP fetch)</title>
-<style>
-body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;margin:18px;color:#111}
-.item{margin:10px 0;padding:8px;background:#f7f7f8;border-radius:6px}
-.vuln{border:2px dashed #d9534f;padding:12px;border-radius:8px;margin-bottom:18px}
-.safe{border:2px solid #5cb85c;padding:12px;border-radius:8px}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Feed</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
 </head>
 <body>
-<h1>Third-party Feed — PHP Fetch Version</h1>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-badge">XSS</div>
+        <div>Feed</div>
+      </div>
+      <div class="nav">
+        <a class="pill" href="/index.html">← Back to index</a>
+      </div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hero">
+      <h1>Feed</h1></div>
+    <div class="card">
+      <h1>Third-party Feed — PHP Fetch Version</h1>
 
 <?php
 // URL of your local feed (can be localhost:8001 or remote)
@@ -51,6 +62,8 @@ $items = $data['items'] ?? [];
     </div>
   <?php endforeach; ?>
 </div>
-
+    </div>
+    <div class="footer">cyber-course</div>
+  </div>
 </body>
 </html>

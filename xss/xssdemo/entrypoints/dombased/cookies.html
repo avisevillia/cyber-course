@@ -1,11 +1,22 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>DOM XSS Demo – Cookie as Entry Point (UNSAFE)</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Cookies</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
 </head>
 <body>
-  <h1>DOM XSS: Cookie Entry Point (UNSAFE)</h1>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="brand-badge">XSS</div><div>Cookies</div></div>
+      <div class="nav"><a class="pill" href="/index.html">← Back to index</a></div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hero"><h1>Cookies</h1></div>
+    <div class="card">
+      <h1>DOM XSS: Cookie Entry Point (UNSAFE)</h1>
 
   <p>
     This page reads <code>prefs</code> cookie and injects it into the DOM via <code>innerHTML</code>.
@@ -57,5 +68,8 @@
     // Optional: auto-render on load (comment out if you want only button-driven)
     // renderFromCookie();
   </script>
+    </div>
+    <div class="footer">cyber-course</div>
+  </div>
 </body>
 </html>

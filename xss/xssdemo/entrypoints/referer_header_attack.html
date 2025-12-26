@@ -1,22 +1,28 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Attacker page (safe vs unsafe referrer)</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 24px; max-width: 800px; }
-    .box { border: 1px solid #ddd; padding: 12px; border-radius: 6px; margin-top: 12px; }
-    button, a { margin-right: 12px; }
-  </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Referer Header Attack</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
 </head>
 <body>
-  <h1>Attacker page — Safe vs Unsafe referrer demo</h1>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="brand-badge">XSS</div><div>Referer Header Attack</div></div>
+      <div class="nav"><a class="pill" href="/index.html">← Back to index</a></div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hero"><h1>Referer Header Attack</h1></div>
+    <div class="card">
+      <h1>Attacker page — Safe vs Unsafe referrer demo</h1>
 
   <div class="box">
     <h3>1) Safe link (regular referrer)</h3>
     <p>Clicking this sends a normal referrer (the current attacker page URL).</p>
     <!-- Regular link - does not change attacker URL -->
-    <a id="safeLink" href="http://xssdemo/entrypoints/referer_header.php" target="_blank">Go to Victim (safe)</a>
+    <a id="safeLink" href="referer_header.php" target="_blank">Go to Victim (safe)</a>
   </div>
 
   <div class="box">
@@ -49,12 +55,14 @@
       history.replaceState(null, '', newUrl);
 
       // now navigate to victim; the browser will send the current attacker URL as the Referer header
-      window.location.href = 'http://xssdemo/entrypoints/referer_header.php';
+      window.location.href = '/entrypoints/referer_header.php';
     }
 
     // Optional: demonstrate an auto-click helper for teachers (uncomment to auto-redirect)
     // window.addEventListener('load', () => document.getElementById('unsafeLink').click());
   </script>
+    </div>
+    <div class="footer">cyber-course</div>
+  </div>
 </body>
 </html>
-

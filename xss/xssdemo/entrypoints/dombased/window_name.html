@@ -1,16 +1,22 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>DOM XSS Demo – window.name Entry Point (UNSAFE)</title>
-  <style>
-    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 12px; }
-    code { background: #f3f3f3; padding: 2px 6px; border-radius: 6px; }
-    .out { padding: 12px; background: #fff7d6; border-radius: 10px; min-height: 2.5em; }
-  </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Window Name</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
 </head>
 <body>
-  <h1>DOM-based XSS: <code>window.name</code> Entry Point (UNSAFE)</h1>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="brand-badge">XSS</div><div>Window Name</div></div>
+      <div class="nav"><a class="pill" href="/index.html">← Back to index</a></div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hero"><h1>Window Name</h1></div>
+    <div class="card">
+      <h1>DOM-based XSS: <code>window.name</code> Entry Point (UNSAFE)</h1>
 
   <p>
     <code>window.name</code> is a browser-provided string attached to a tab/window.
@@ -85,5 +91,8 @@
     // This uses textContent, which does NOT interpret HTML.
     // document.getElementById("output").textContent = "Current window.name (safe): " + (window.name || "");
   </script>
+    </div>
+    <div class="footer">cyber-course</div>
+  </div>
 </body>
 </html>

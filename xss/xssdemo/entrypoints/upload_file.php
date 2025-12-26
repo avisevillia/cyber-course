@@ -23,10 +23,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['up'])) {
 }
 ?>
 <!doctype html>
-<html>
-<head><meta charset="utf-8"><title>Upload (vulnerable)</title></head>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Upload File</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
+</head>
 <body>
-  <h1>Vulnerable Upload Demo</h1>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-badge">XSS</div>
+        <div>Upload File</div>
+      </div>
+      <div class="nav">
+        <a class="pill" href="/index.html">← Back to index</a>
+      </div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hero">
+      <h1>Upload File</h1></div>
+    <div class="card">
+      <h1>Vulnerable Upload Demo</h1>
 
   <form method="post" enctype="multipart/form-data">
     <input type="file" name="up">
@@ -41,6 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['up'])) {
     <p>File on disk (unsafe): <a href="/uploads/<?php echo htmlspecialchars(basename($uploaded_name)); ?>">
       <?php echo htmlspecialchars(basename($uploaded_name)); ?></a></p>
   <?php endif; ?>
-  
+    </div>
+    <div class="footer">cyber-course</div>
+  </div>
 </body>
 </html>
