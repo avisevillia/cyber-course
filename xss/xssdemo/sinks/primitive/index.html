@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Primitive JavaScript Sinks</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="stylesheet" href="../../styles.css" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../assets/style.css" />
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="../../../styles.css" />
+  <link rel="stylesheet" href="../../../css/style.css" />
+  <link rel="stylesheet" href="../../../assets/style.css" />
+  <link rel="stylesheet" href="css/primitive-sinks.css" />
+</head>
+<body class="ps" data-theme="index">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="badge">XSS Demo</div>
+        <h1>JavaScript Sinks Lab</h1>
+      </div>
+      <nav class="navlinks">
+        <a href="../../index.html">← Back to XSS Demo</a>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <section class="card hero">
+      <div class="pad">
+        <div class="appMark"><span class="emoji">🧠</span><span class="appName">Sinks Lab Hub</span></div>
+            <h2>Primitive JavaScript Sinks</h2>
+        <p>Mini labs for the most common, stable browser sinks: DOM execution, URL execution, and JS execution.</p>
+        <div class="kpi">
+          <div class="pill">Goal: find <strong>sink</strong> → trace <strong>source</strong></div>
+          <div class="pill">Payloads: <code>alert(1)</code> (HTML/URL/JS)</div>
+          <div class="pill">Skill: read JS code & data flow</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" style="margin-top:16px;">
+      <div class="card">
+        <div class="pad">
+          <h3>How to use</h3>
+          <div class="callout">
+            <strong>Workflow</strong><br/>
+            1) Open a sink demo page<br/>
+            2) Try the <b>Direct demo</b> (source → sink, very clear)<br/>
+            3) Then solve the <b>Puzzle</b> (find the only input that reaches the sink)<br/>
+            4) Use DevTools → <b>Sources</b> and search for the sink string shown on the page
+          </div>
+
+          <hr class="sep"/>
+          <h3>Quick map (tree)</h3>
+<pre class="tree">DOM execution (12 labs)
+├── HTML parsing: innerHTML, outerHTML, insertAdjacentHTML, write/writeln, srcdoc, template.innerHTML
+├── Event handlers: setAttribute('on*'), on* property
+├── DOM builders: createContextualFragment, DOMParser, appendChild(taintedNode)
+└── Script text: script.text / script.textContent
+
+URL execution (11 labs)
+├── Navigation: location.* (location=, href, assign(), replace()), window.open, document.location
+├── Script src: script.src + append
+├── Frame: iframe.src
+└── Other: a.href, form.action, serviceWorker.register()
+
+JS execution (4 labs)
+├── eval(), new Function()
+└── setTimeout/setInterval(string)
+</pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="pad">
+          <h3>Pick a category</h3>
+          <p class="small">Ordered: common → less common.</p>
+          <hr class="sep"/>
+
+          <h3>DOM execution</h3>
+          <table>
+            <thead><tr><th>Sink</th><th>Demo</th></tr></thead>
+            <tbody>
+              <tr><td>element.innerHTML</td><td><a href="dom/innerhtml.html">Open</a></td></tr>
+              <tr><td>element.outerHTML</td><td><a href="dom/outerhtml.html">Open</a></td></tr>
+              <tr><td>element.insertAdjacentHTML()</td><td><a href="dom/insertadjacenthtml.html">Open</a></td></tr>
+              <tr><td>document.write() / document.writeln()</td><td><a href="dom/write.html">Open</a></td></tr>
+              <tr><td>iframe.srcdoc</td><td><a href="dom/srcdoc.html">Open</a></td></tr>
+              <tr><td>template.innerHTML (then inserted)</td><td><a href="dom/template-innerhtml.html">Open</a></td></tr>
+              <tr><td>setAttribute('on*', ...)</td><td><a href="dom/setattribute-on.html">Open</a></td></tr>
+              <tr><td>on* property</td><td><a href="dom/onprop.html">Open</a></td></tr>
+              <tr><td>createRange().createContextualFragment()</td><td><a href="dom/createcontextualfragment.html">Open</a></td></tr>
+              <tr><td>DOMParser().parseFromString(..., 'text/html')</td><td><a href="dom/domparser.html">Open</a></td></tr>
+              <tr><td>appendChild(taintedNode)</td><td><a href="dom/appendchild-taintednode.html">Open</a></td></tr>
+              <tr><td>script.text / script.textContent</td><td><a href="dom/script-text.html">Open</a></td></tr>
+            </tbody>
+          </table>
+
+          <hr class="sep"/>
+          <h3>URL execution</h3>
+          <table>
+            <thead><tr><th>Sink</th><th>Demo</th></tr></thead>
+            <tbody>
+              <tr><td>location = ...</td><td><a href="url/location-assign.html">Open</a></td></tr>
+              <tr><td>location.href = ...</td><td><a href="url/location-href.html">Open</a></td></tr>
+              <tr><td>location.assign(...)</td><td><a href="url/location-assign-method.html">Open</a></td></tr>
+              <tr><td>location.replace(...)</td><td><a href="url/location-replace.html">Open</a></td></tr>
+              <tr><td>document.location (variants)</td><td><a href="url/document-location.html">Open</a></td></tr>
+              <tr><td>window.open(...)</td><td><a href="url/window-open.html">Open</a></td></tr>
+              <tr><td>script.src (then appended)</td><td><a href="url/script-src.html">Open</a></td></tr>
+              <tr><td>iframe.src</td><td><a href="url/iframe-src.html">Open</a></td></tr>
+              <tr><td>a.href</td><td><a href="url/a-href.html">Open</a></td></tr>
+              <tr><td>form.action</td><td><a href="url/form-action.html">Open</a></td></tr>
+              <tr><td>navigator.serviceWorker.register()</td><td><a href="url/serviceworker-register.html">Open</a></td></tr>
+            </tbody>
+          </table>
+
+          <hr class="sep"/>
+          <h3>JS execution</h3>
+          <table>
+            <thead><tr><th>Sink</th><th>Demo</th></tr></thead>
+            <tbody>
+              <tr><td>eval(...)</td><td><a href="js/eval.html">Open</a></td></tr>
+              <tr><td>new Function(...)</td><td><a href="js/new-function.html">Open</a></td></tr>
+              <tr><td>setTimeout(string)</td><td><a href="js/settimeout-string.html">Open</a></td></tr>
+              <tr><td>setInterval(string)</td><td><a href="js/setinterval-string.html">Open</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>Hint: On each demo page, use “Open JS source”, then search for the sink string.</div>
+    </footer>
+  </main>
+
+  <script src="js/common.js"></script>
+</body>
+</html>

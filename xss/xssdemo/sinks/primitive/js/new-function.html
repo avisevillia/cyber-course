@@ -1,0 +1,196 @@
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>JS Sink: new Function(...)</title>
+    <link rel="stylesheet" href="../../style.css" />
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../../css/style.css" />
+<link rel="stylesheet" href="../../assets/style.css" />
+<link rel="stylesheet" href="../../../style.css" />
+<link rel="stylesheet" href="../../../styles.css" />
+<link rel="stylesheet" href="../../../css/style.css" />
+<link rel="stylesheet" href="../../../assets/style.css" />
+<link rel="stylesheet" href="../css/primitive-sinks.css" />
+    </head>
+
+<body class="ps" data-theme="finance">
+      <div class="topbar">
+        <div class="topbar-inner">
+          <div class="brand">
+            <div class="badge">XSS Demo</div>
+            <h1>JavaScript Sinks Lab</h1>
+          </div>
+          <nav class="navlinks">
+            <a href="../index.html">← Primitive Sinks</a>
+          </nav>
+        </div>
+      </div>
+
+      <main class="container">
+        <section class="card hero">
+          <div class="pad">
+            <div class="appMark"><span class="emoji">🧮</span><span class="appName">Formula Engine</span></div>
+            <h2>JS Sink: new Function(...)</h2>
+            <p>JS execution → Code parsing • new Function(userInput)()</p>
+
+            <div class="case" style="margin-top:12px;">
+              <div class="title"><strong>Use case:</strong> Template Lab — Expression Evaluator</div>
+              <div class="sub">A template playground compiles a “calculation” string using &lt;code&gt;new Function&lt;/code&gt;.</div>
+            </div>
+
+            <div class="kpi" style="margin-top:12px;">
+              <div class="pill">Find the <strong>sink</strong> and trace the <strong>source</strong></div>
+              <div class="pill">DevTools → <strong>Sources</strong></div>
+              <div class="pill">Search for: <code>new Function</code></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid" style="margin-top:16px;">
+          <div class="stack">
+            <div class="card">
+      <div class="pad">
+        <div class="sectionTag"><b>A) Direct demo</b></div>
+        <p class="muted" style="margin-top:10px;">Direct demo: compile and execute the input via <code>new Function</code>.</p>
+
+        <div id="lab-warning-direct" class="callout warn" hidden></div>
+
+        <form id="directForm">
+          <div class="twoCol">
+            <div>
+  <label for="direct_expr">Expression code (JavaScript)</label>
+  <input id="direct_expr" type="text" placeholder="Try: alert(1)" />
+</div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="runDirectBtn">Run</button>
+            <button type="button" id="resetDirectBtn">Reset</button>
+            <button type="button" class="ghost" data-show-solution="directSolution">Show solution</button>
+            <button type="button" class="ghost" data-copy="alert(1)" data-copystatus="1">Copy suggested payload</button>
+          </div>
+        </form>
+
+        <hr class="sep"/>
+        <div class="output">
+  <div class="title">Output area (sink target)</div>
+  <div class="box" id="directStatus">(Run the demo)</div>
+</div>
+
+        <div class="output" style="margin-top:12px;">
+          <div class="title">Debug trace (which source reached the sink?)</div>
+          <div class="box" id="directDebug"></div>
+        </div>
+
+        <div id="directSolution" class="callout" style="margin-top:12px;" hidden>
+          <strong>Solution</strong><br/>
+          <span id="directSolutionText"></span>
+        </div>
+      </div>
+    </div>
+            <div class="card">
+      <div class="pad">
+        <div class="sectionTag"><b>B) Puzzle</b></div>
+        <p class="muted" style="margin-top:10px;">Puzzle: only one field becomes the code passed to new Function().</p>
+
+        <div id="lab-warning-puzzle" class="callout warn" hidden></div>
+
+        <form id="puzzleForm">
+          <div class="twoCol">
+            <div>
+  <label for="template">Template</label>
+  <input id="template" type="text" placeholder="Hello {name}" />
+</div>
+<div>
+  <label for="name">Name</label>
+  <input id="name" type="text" placeholder="Dana" />
+</div>
+<div>
+  <label for="expr">Expression code (used)</label>
+  <input id="expr" type="text" placeholder="Try alert(1) here…" />
+</div>
+<div>
+  <label for="format">Format</label>
+  <input id="format" type="text" placeholder="text" />
+</div>
+<div>
+          <label for="engine">Engine</label>
+          <select id="engine">
+            <option value="safe">Safe</option>
+<option value="dynamic">Dynamic (Function)</option>
+          </select>
+        </div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="runPuzzleBtn">Run</button>
+            <button type="button" id="resetPuzzleBtn">Reset</button>
+            <button type="button" class="ghost" data-show-solution="puzzleSolution">Show solution</button>
+            <button type="button" class="ghost" data-copy="alert(1)" data-copystatus="1">Copy suggested payload</button>
+          </div>
+        </form>
+
+        <hr class="sep"/>
+        <div class="output">
+  <div class="title">Output area (sink target)</div>
+  <div class="box" id="puzzleStatus">(Run the demo)</div>
+</div>
+
+        <div class="output" style="margin-top:12px;">
+          <div class="title">Debug trace (which source reached the sink?)</div>
+          <div class="box" id="puzzleDebug"></div>
+        </div>
+
+        <div id="puzzleSolution" class="callout" style="margin-top:12px;" hidden>
+          <strong>Solution</strong><br/>
+          <span id="puzzleSolutionText"></span>
+        </div>
+      </div>
+    </div>
+          </div>
+
+          <div class="card">
+  <div class="pad">
+    <h3>Sink</h3>
+    <div class="callout">
+      <div><strong>Category:</strong> JS execution → Direct code parsing</div>
+      <div><strong>Sink API:</strong> <code>new Function(userInput)()</code></div>
+      <div><strong>Search in code:</strong> <code>new Function</code></div>
+      <div><strong>Difficulty:</strong> Easy</div>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Suggested payload</h3>
+    <div class="callout">
+      <div class="small">Compiles a string into a new function and executes it.</div>
+      <pre><code>alert(1)</code></pre>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Where to look in code</h3>
+    <p class="small">Open the JS file and search for the sink string shown above.</p>
+    <div class="actions">
+      <a class="badge" href="./new-function.js" target="_blank" rel="noreferrer">Open JS source</a>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Safety note</h3>
+    <p class="small">These pages intentionally contain unsafe code for classroom demos. Do not copy these patterns into real apps.</p>
+  </div>
+</div>
+        </section>
+
+        <footer>
+          <div>Hint: Use “Open JS source” and search for the sink string.</div>
+        </footer>
+      </main>
+
+      <script src="../js/common.js"></script>
+      <script src="./new-function.js"></script>
+    </body>
+    </html>

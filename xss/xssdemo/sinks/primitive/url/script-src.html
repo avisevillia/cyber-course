@@ -1,0 +1,196 @@
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>URL Sink: script.src (then appended)</title>
+    <link rel="stylesheet" href="../../style.css" />
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../../css/style.css" />
+<link rel="stylesheet" href="../../assets/style.css" />
+<link rel="stylesheet" href="../../../style.css" />
+<link rel="stylesheet" href="../../../styles.css" />
+<link rel="stylesheet" href="../../../css/style.css" />
+<link rel="stylesheet" href="../../../assets/style.css" />
+<link rel="stylesheet" href="../css/primitive-sinks.css" />
+    </head>
+
+<body class="ps" data-theme="widgets">
+      <div class="topbar">
+        <div class="topbar-inner">
+          <div class="brand">
+            <div class="badge">XSS Demo</div>
+            <h1>JavaScript Sinks Lab</h1>
+          </div>
+          <nav class="navlinks">
+            <a href="../index.html">← Primitive Sinks</a>
+          </nav>
+        </div>
+      </div>
+
+      <main class="container">
+        <section class="card hero">
+          <div class="pad">
+            <div class="appMark"><span class="emoji">🧩</span><span class="appName">Widget Loader</span></div>
+            <h2>URL Sink: script.src (then appended)</h2>
+            <p>URL execution → Resource loading • script.src = userInput; appendChild(script)</p>
+
+            <div class="case" style="margin-top:12px;">
+              <div class="title"><strong>Use case:</strong> Partner Integration — Chat Widget Loader</div>
+              <div class="sub">A settings page loads a partner widget script from a URL and appends it to the DOM.</div>
+            </div>
+
+            <div class="kpi" style="margin-top:12px;">
+              <div class="pill">Find the <strong>sink</strong> and trace the <strong>source</strong></div>
+              <div class="pill">DevTools → <strong>Sources</strong></div>
+              <div class="pill">Search for: <code>script.src</code></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid" style="margin-top:16px;">
+          <div class="stack">
+            <div class="card">
+      <div class="pad">
+        <div class="sectionTag"><b>A) Direct demo</b></div>
+        <p class="muted" style="margin-top:10px;">Direct demo: set <code>script.src</code> from input and append the script element.</p>
+
+        <div id="lab-warning-direct" class="callout warn" hidden></div>
+
+        <form id="directForm">
+          <div class="twoCol">
+            <div>
+  <label for="direct_script">Widget script URL</label>
+  <input id="direct_script" type="text" placeholder="Paste: data:text/javascript,alert(1)" />
+</div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="runDirectBtn">Run</button>
+            <button type="button" id="resetDirectBtn">Reset</button>
+            <button type="button" class="ghost" data-show-solution="directSolution">Show solution</button>
+            <button type="button" class="ghost" data-copy="data:text/javascript,alert(1)" data-copystatus="1">Copy suggested payload</button>
+          </div>
+        </form>
+
+        <hr class="sep"/>
+        <div class="output">
+  <div class="title">Output area (sink target)</div>
+  <div class="box" id="directStatus">(Run the demo)</div>
+</div>
+
+        <div class="output" style="margin-top:12px;">
+          <div class="title">Debug trace (which source reached the sink?)</div>
+          <div class="box" id="directDebug"></div>
+        </div>
+
+        <div id="directSolution" class="callout" style="margin-top:12px;" hidden>
+          <strong>Solution</strong><br/>
+          <span id="directSolutionText"></span>
+        </div>
+      </div>
+    </div>
+            <div class="card">
+      <div class="pad">
+        <div class="sectionTag"><b>B) Puzzle</b></div>
+        <p class="muted" style="margin-top:10px;">Puzzle: only one field is treated as the script URL.</p>
+
+        <div id="lab-warning-puzzle" class="callout warn" hidden></div>
+
+        <form id="puzzleForm">
+          <div class="twoCol">
+            <div>
+  <label for="partner">Partner name</label>
+  <input id="partner" type="text" placeholder="ChatCo" />
+</div>
+<div>
+  <label for="region">Region</label>
+  <input id="region" type="text" placeholder="EU" />
+</div>
+<div>
+  <label for="widgetUrl">Widget script URL (used)</label>
+  <input id="widgetUrl" type="text" placeholder="Try payload here…" />
+</div>
+<div>
+  <label for="config">Widget config (JSON)</label>
+  <textarea id="config" placeholder="Not executed here."></textarea>
+</div>
+<div>
+          <label for="loadMode">Load mode</label>
+          <select id="loadMode">
+            <option value="off">Off</option>
+<option value="on">On (legacy loader)</option>
+          </select>
+        </div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="runPuzzleBtn">Run</button>
+            <button type="button" id="resetPuzzleBtn">Reset</button>
+            <button type="button" class="ghost" data-show-solution="puzzleSolution">Show solution</button>
+            <button type="button" class="ghost" data-copy="data:text/javascript,alert(1)" data-copystatus="1">Copy suggested payload</button>
+          </div>
+        </form>
+
+        <hr class="sep"/>
+        <div class="output">
+  <div class="title">Output area (sink target)</div>
+  <div class="box" id="puzzleStatus">(Run the demo)</div>
+</div>
+
+        <div class="output" style="margin-top:12px;">
+          <div class="title">Debug trace (which source reached the sink?)</div>
+          <div class="box" id="puzzleDebug"></div>
+        </div>
+
+        <div id="puzzleSolution" class="callout" style="margin-top:12px;" hidden>
+          <strong>Solution</strong><br/>
+          <span id="puzzleSolutionText"></span>
+        </div>
+      </div>
+    </div>
+          </div>
+
+          <div class="card">
+  <div class="pad">
+    <h3>Sink</h3>
+    <div class="callout">
+      <div><strong>Category:</strong> URL execution → Resource loading</div>
+      <div><strong>Sink API:</strong> <code>script.src (then appended)</code></div>
+      <div><strong>Search in code:</strong> <code>script.src</code></div>
+      <div><strong>Difficulty:</strong> Easy</div>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Suggested payload</h3>
+    <div class="callout">
+      <div class="small">Loads a script URL. For demos, a <code>data:</code> JavaScript URL is convenient.</div>
+      <pre><code>data:text/javascript,alert(1)</code></pre>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Where to look in code</h3>
+    <p class="small">Open the JS file and search for the sink string shown above.</p>
+    <div class="actions">
+      <a class="badge" href="./script-src.js" target="_blank" rel="noreferrer">Open JS source</a>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Safety note</h3>
+    <p class="small">These pages intentionally contain unsafe code for classroom demos. Do not copy these patterns into real apps.</p>
+  </div>
+</div>
+        </section>
+
+        <footer>
+          <div>Hint: Use “Open JS source” and search for the sink string.</div>
+        </footer>
+      </main>
+
+      <script src="../js/common.js"></script>
+      <script src="./script-src.js"></script>
+    </body>
+    </html>

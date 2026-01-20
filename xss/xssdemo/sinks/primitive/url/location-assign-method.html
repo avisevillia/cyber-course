@@ -1,0 +1,202 @@
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>URL Sink: location.assign(...)</title>
+    <link rel="stylesheet" href="../../style.css" />
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../../css/style.css" />
+<link rel="stylesheet" href="../../assets/style.css" />
+<link rel="stylesheet" href="../../../style.css" />
+<link rel="stylesheet" href="../../../styles.css" />
+<link rel="stylesheet" href="../../../css/style.css" />
+<link rel="stylesheet" href="../../../assets/style.css" />
+<link rel="stylesheet" href="../css/primitive-sinks.css" />
+    </head>
+
+<body class="ps" data-theme="checkout">
+      <div class="topbar">
+        <div class="topbar-inner">
+          <div class="brand">
+            <div class="badge">XSS Demo</div>
+            <h1>JavaScript Sinks Lab</h1>
+          </div>
+          <nav class="navlinks">
+            <a href="../index.html">← Primitive Sinks</a>
+          </nav>
+        </div>
+      </div>
+
+      <main class="container">
+        <section class="card hero">
+          <div class="pad">
+            <div class="appMark"><span class="emoji">🧾</span><span class="appName">Checkout Router</span></div>
+            <h2>URL Sink: location.assign(...)</h2>
+            <p>URL execution → Navigation • location.assign(userInput)</p>
+
+            <div class="case" style="margin-top:12px;">
+              <div class="title"><strong>Use case:</strong> Checkout — “Continue” Step</div>
+              <div class="sub">A checkout flow uses &lt;code&gt;location.assign&lt;/code&gt; to move to the next step from a URL parameter-like field.</div>
+            </div>
+
+            <div class="kpi" style="margin-top:12px;">
+              <div class="pill">Find the <strong>sink</strong> and trace the <strong>source</strong></div>
+              <div class="pill">DevTools → <strong>Sources</strong></div>
+              <div class="pill">Search for: <code>location.assign</code></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid" style="margin-top:16px;">
+          <div class="stack">
+            <div class="card">
+      <div class="pad">
+        <div class="sectionTag"><b>A) Direct demo</b></div>
+        <p class="muted" style="margin-top:10px;">Direct demo: call <code>location.assign</code> (in an iframe).</p>
+
+        <div id="lab-warning-direct" class="callout warn" hidden></div>
+
+        <form id="directForm">
+          <div class="twoCol">
+            <div>
+  <label for="direct_next">Next-step URL</label>
+  <input id="direct_next" type="text" placeholder="Paste the suggested data: URL…" />
+</div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="runDirectBtn">Run</button>
+            <button type="button" id="resetDirectBtn">Reset</button>
+            <button type="button" class="ghost" data-show-solution="directSolution">Show solution</button>
+            <button type="button" class="ghost" data-copy="data:text/html,%3Cscript%3Ealert(1)%3C/script%3E" data-copystatus="1">Copy suggested payload</button>
+          </div>
+        </form>
+
+        <hr class="sep"/>
+        <div class="output">
+  <div class="title">Output area (sink target) (iframe)</div>
+  <div class="box">
+    <iframe id="directFrame" name="directFrame" title="direct frame" style="width:100%; height:220px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(0,0,0,0.18);"></iframe>
+  </div>
+  <div class="hint"></div>
+</div>
+
+        <div class="output" style="margin-top:12px;">
+          <div class="title">Debug trace (which source reached the sink?)</div>
+          <div class="box" id="directDebug"></div>
+        </div>
+
+        <div id="directSolution" class="callout" style="margin-top:12px;" hidden>
+          <strong>Solution</strong><br/>
+          <span id="directSolutionText"></span>
+        </div>
+      </div>
+    </div>
+            <div class="card">
+      <div class="pad">
+        <div class="sectionTag"><b>B) Puzzle</b></div>
+        <p class="muted" style="margin-top:10px;">Puzzle: find the only field that becomes the next-step URL.</p>
+
+        <div id="lab-warning-puzzle" class="callout warn" hidden></div>
+
+        <form id="puzzleForm">
+          <div class="twoCol">
+            <div>
+  <label for="cart">Cart id</label>
+  <input id="cart" type="text" placeholder="CART-19" />
+</div>
+<div>
+  <label for="coupon">Coupon</label>
+  <input id="coupon" type="text" placeholder="SAVE10" />
+</div>
+<div>
+  <label for="continueTo">Continue to (URL)</label>
+  <input id="continueTo" type="text" placeholder="Try payload here…" />
+</div>
+<div>
+  <label for="shipping">Shipping method</label>
+  <input id="shipping" type="text" placeholder="standard" />
+</div>
+<div>
+          <label for="confirm">Confirmation</label>
+          <select id="confirm">
+            <option value="no">Not confirmed</option>
+<option value="yes">Confirmed</option>
+          </select>
+        </div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="runPuzzleBtn">Run</button>
+            <button type="button" id="resetPuzzleBtn">Reset</button>
+            <button type="button" class="ghost" data-show-solution="puzzleSolution">Show solution</button>
+            <button type="button" class="ghost" data-copy="data:text/html,%3Cscript%3Ealert(1)%3C/script%3E" data-copystatus="1">Copy suggested payload</button>
+          </div>
+        </form>
+
+        <hr class="sep"/>
+        <div class="output">
+  <div class="title">Output area (sink target) (iframe)</div>
+  <div class="box">
+    <iframe id="puzzleFrame" name="puzzleFrame" title="puzzle frame" style="width:100%; height:220px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(0,0,0,0.18);"></iframe>
+  </div>
+  <div class="hint"></div>
+</div>
+
+        <div class="output" style="margin-top:12px;">
+          <div class="title">Debug trace (which source reached the sink?)</div>
+          <div class="box" id="puzzleDebug"></div>
+        </div>
+
+        <div id="puzzleSolution" class="callout" style="margin-top:12px;" hidden>
+          <strong>Solution</strong><br/>
+          <span id="puzzleSolutionText"></span>
+        </div>
+      </div>
+    </div>
+          </div>
+
+          <div class="card">
+  <div class="pad">
+    <h3>Sink</h3>
+    <div class="callout">
+      <div><strong>Category:</strong> URL execution → Navigation</div>
+      <div><strong>Sink API:</strong> <code>location.assign(userInput)</code></div>
+      <div><strong>Search in code:</strong> <code>location.assign</code></div>
+      <div><strong>Difficulty:</strong> Easy</div>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Suggested payload</h3>
+    <div class="callout">
+      <div class="small">Navigation sink via method call. This lab navigates an iframe.</div>
+      <pre><code>data:text/html,%3Cscript%3Ealert(1)%3C/script%3E</code></pre>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Where to look in code</h3>
+    <p class="small">Open the JS file and search for the sink string shown above.</p>
+    <div class="actions">
+      <a class="badge" href="./location-assign-method.js" target="_blank" rel="noreferrer">Open JS source</a>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Safety note</h3>
+    <p class="small">These pages intentionally contain unsafe code for classroom demos. Do not copy these patterns into real apps.</p>
+  </div>
+</div>
+        </section>
+
+        <footer>
+          <div>Hint: Use “Open JS source” and search for the sink string.</div>
+        </footer>
+      </main>
+
+      <script src="../js/common.js"></script>
+      <script src="./location-assign-method.js"></script>
+    </body>
+    </html>

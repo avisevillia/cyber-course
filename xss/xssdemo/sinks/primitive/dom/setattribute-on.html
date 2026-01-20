@@ -1,0 +1,210 @@
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>DOM Sink: setAttribute('on*', ...)</title>
+    <link rel="stylesheet" href="../../style.css" />
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../../css/style.css" />
+<link rel="stylesheet" href="../../assets/style.css" />
+<link rel="stylesheet" href="../../../style.css" />
+<link rel="stylesheet" href="../../../styles.css" />
+<link rel="stylesheet" href="../../../css/style.css" />
+<link rel="stylesheet" href="../../../assets/style.css" />
+<link rel="stylesheet" href="../css/primitive-sinks.css" />
+    </head>
+
+<body class="ps" data-theme="admin">
+      <div class="topbar">
+        <div class="topbar-inner">
+          <div class="brand">
+            <div class="badge">XSS Demo</div>
+            <h1>JavaScript Sinks Lab</h1>
+          </div>
+          <nav class="navlinks">
+            <a href="../index.html">← Primitive Sinks</a>
+          </nav>
+        </div>
+      </div>
+
+      <main class="container">
+        <section class="card hero">
+          <div class="pad">
+            <div class="appMark"><span class="emoji">⚙️</span><span class="appName">Admin Console</span></div>
+            <h2>DOM Sink: setAttribute(&#x27;on*&#x27;, ...)</h2>
+            <p>DOM execution → Event handlers • element.setAttribute('onclick', userInput)</p>
+
+            <div class="case" style="margin-top:12px;">
+              <div class="title"><strong>Use case:</strong> Admin Panel — “Quick Action” Button</div>
+              <div class="sub">A legacy admin panel lets users define a quick action by writing an onclick handler as a string.</div>
+            </div>
+
+            <div class="kpi" style="margin-top:12px;">
+              <div class="pill">Find the <strong>sink</strong> and trace the <strong>source</strong></div>
+              <div class="pill">DevTools → <strong>Sources</strong></div>
+              <div class="pill">Search for: <code>setAttribute(&#x27;on</code></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid" style="margin-top:16px;">
+          <div class="stack">
+            <div class="card">
+      <div class="pad">
+        <div class="sectionTag"><b>A) Direct demo</b></div>
+        <p class="muted" style="margin-top:10px;">Direct demo: set an onclick handler from a string and then click the button.</p>
+
+        <div id="lab-warning-direct" class="callout warn" hidden></div>
+
+        <form id="directForm">
+          <div class="twoCol">
+            <div>
+  <label for="direct_handler">onclick handler (JavaScript)</label>
+  <input id="direct_handler" type="text" placeholder="Try: alert(1)" />
+</div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="runDirectBtn">Run</button>
+            <button type="button" id="resetDirectBtn">Reset</button>
+            <button type="button" class="ghost" data-show-solution="directSolution">Show solution</button>
+            <button type="button" class="ghost" data-copy="alert(1)" data-copystatus="1">Copy suggested payload</button>
+          </div>
+        </form>
+
+        <hr class="sep"/>
+        <div class="output">
+  <div class="title">Output area (sink target)</div>
+  <div class="box">
+    <button type="button" class="primary" id="directTargetBtn">Click me</button>
+    <div class="small" style="margin-top:10px;">After you click <b>Run</b>, click the button to trigger the handler.</div>
+    <div style="height:8px;"></div>
+    <div class="small muted" id="directStatus">(Run the demo)</div>
+  </div>
+</div>
+
+        <div class="output" style="margin-top:12px;">
+          <div class="title">Debug trace (which source reached the sink?)</div>
+          <div class="box" id="directDebug"></div>
+        </div>
+
+        <div id="directSolution" class="callout" style="margin-top:12px;" hidden>
+          <strong>Solution</strong><br/>
+          <span id="directSolutionText"></span>
+        </div>
+      </div>
+    </div>
+            <div class="card">
+      <div class="pad">
+        <div class="sectionTag"><b>B) Puzzle</b></div>
+        <p class="muted" style="margin-top:10px;">Puzzle: only one field becomes the onclick handler.</p>
+
+        <div id="lab-warning-puzzle" class="callout warn" hidden></div>
+
+        <form id="puzzleForm">
+          <div class="twoCol">
+            <div>
+  <label for="label">Button label</label>
+  <input id="label" type="text" placeholder="Run report" />
+</div>
+<div>
+  <label for="icon">Icon name</label>
+  <input id="icon" type="text" placeholder="bolt" />
+</div>
+<div>
+  <label for="role">Role</label>
+  <input id="role" type="text" placeholder="admin" />
+</div>
+<div>
+  <label for="handlerCode">Handler code (JS)</label>
+  <input id="handlerCode" type="text" placeholder="Try alert(1) here…" />
+</div>
+<div>
+  <label for="notes">Notes</label>
+  <textarea id="notes" placeholder="Ignored / safe."></textarea>
+</div>
+<div>
+          <label for="featureFlag">Feature flag</label>
+          <select id="featureFlag">
+            <option value="off">Off</option>
+<option value="legacy">Legacy handler mode</option>
+          </select>
+        </div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="runPuzzleBtn">Run</button>
+            <button type="button" id="resetPuzzleBtn">Reset</button>
+            <button type="button" class="ghost" data-show-solution="puzzleSolution">Show solution</button>
+            <button type="button" class="ghost" data-copy="alert(1)" data-copystatus="1">Copy suggested payload</button>
+          </div>
+        </form>
+
+        <hr class="sep"/>
+        <div class="output">
+  <div class="title">Output area (sink target)</div>
+  <div class="box">
+    <button type="button" class="primary" id="puzzleTargetBtn">Click me</button>
+    <div class="small" style="margin-top:10px;">After you click <b>Run</b>, click the button to trigger the handler.</div>
+    <div style="height:8px;"></div>
+    <div class="small muted" id="puzzleStatus">(Run the demo)</div>
+  </div>
+</div>
+
+        <div class="output" style="margin-top:12px;">
+          <div class="title">Debug trace (which source reached the sink?)</div>
+          <div class="box" id="puzzleDebug"></div>
+        </div>
+
+        <div id="puzzleSolution" class="callout" style="margin-top:12px;" hidden>
+          <strong>Solution</strong><br/>
+          <span id="puzzleSolutionText"></span>
+        </div>
+      </div>
+    </div>
+          </div>
+
+          <div class="card">
+  <div class="pad">
+    <h3>Sink</h3>
+    <div class="callout">
+      <div><strong>Category:</strong> DOM execution → Event handlers</div>
+      <div><strong>Sink API:</strong> <code>setAttribute(&#x27;on*&#x27;, ...)</code></div>
+      <div><strong>Search in code:</strong> <code>setAttribute(&#x27;on</code></div>
+      <div><strong>Difficulty:</strong> Easy</div>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Suggested payload</h3>
+    <div class="callout">
+      <div class="small">Event handler attributes compile strings as JavaScript. After setting it, click the button.</div>
+      <pre><code>alert(1)</code></pre>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Where to look in code</h3>
+    <p class="small">Open the JS file and search for the sink string shown above.</p>
+    <div class="actions">
+      <a class="badge" href="./setattribute-on.js" target="_blank" rel="noreferrer">Open JS source</a>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Safety note</h3>
+    <p class="small">These pages intentionally contain unsafe code for classroom demos. Do not copy these patterns into real apps.</p>
+  </div>
+</div>
+        </section>
+
+        <footer>
+          <div>Hint: Use “Open JS source” and search for the sink string.</div>
+        </footer>
+      </main>
+
+      <script src="../js/common.js"></script>
+      <script src="./setattribute-on.js"></script>
+    </body>
+    </html>

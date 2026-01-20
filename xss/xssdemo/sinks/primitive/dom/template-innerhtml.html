@@ -1,0 +1,200 @@
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>DOM Sink: template.innerHTML (then inserted)</title>
+    <link rel="stylesheet" href="../../style.css" />
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../../css/style.css" />
+<link rel="stylesheet" href="../../assets/style.css" />
+<link rel="stylesheet" href="../../../style.css" />
+<link rel="stylesheet" href="../../../styles.css" />
+<link rel="stylesheet" href="../../../css/style.css" />
+<link rel="stylesheet" href="../../../assets/style.css" />
+<link rel="stylesheet" href="../css/primitive-sinks.css" />
+    </head>
+
+<body class="ps" data-theme="builder">
+      <div class="topbar">
+        <div class="topbar-inner">
+          <div class="brand">
+            <div class="badge">XSS Demo</div>
+            <h1>JavaScript Sinks Lab</h1>
+          </div>
+          <nav class="navlinks">
+            <a href="../index.html">← Primitive Sinks</a>
+          </nav>
+        </div>
+      </div>
+
+      <main class="container">
+        <section class="card hero">
+          <div class="pad">
+            <div class="appMark"><span class="emoji">🧩</span><span class="appName">Page Builder</span></div>
+            <h2>DOM Sink: template.innerHTML (then inserted)</h2>
+            <p>DOM execution → HTML parsing • template.innerHTML (then inserted)</p>
+
+            <div class="case" style="margin-top:12px;">
+              <div class="title"><strong>Use case:</strong> Finance Portal — Invoice Template Preview</div>
+              <div class="sub">A preview tool uses a &lt;code&gt;&amp;lt;template&amp;gt;&lt;/code&gt; to build an invoice layout. One field is inserted as raw template HTML.</div>
+            </div>
+
+            <div class="kpi" style="margin-top:12px;">
+              <div class="pill">Find the <strong>sink</strong> and trace the <strong>source</strong></div>
+              <div class="pill">DevTools → <strong>Sources</strong></div>
+              <div class="pill">Search for: <code>template.innerHTML</code></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid" style="margin-top:16px;">
+          <div class="stack">
+            <div class="card">
+      <div class="pad">
+        <div class="sectionTag"><b>A) Direct demo</b></div>
+        <p class="muted" style="margin-top:10px;">Direct demo: build invoice preview from raw template HTML.</p>
+
+        <div id="lab-warning-direct" class="callout warn" hidden></div>
+
+        <form id="directForm">
+          <div class="twoCol">
+            <div>
+  <label for="direct_tpl">Invoice template (HTML)</label>
+  <textarea id="direct_tpl" placeholder="Paste payload…"></textarea>
+</div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="runDirectBtn">Run</button>
+            <button type="button" id="resetDirectBtn">Reset</button>
+            <button type="button" class="ghost" data-show-solution="directSolution">Show solution</button>
+            <button type="button" class="ghost" data-copy="<img src=x onerror=alert(1)>" data-copystatus="1">Copy suggested payload</button>
+          </div>
+        </form>
+
+        <hr class="sep"/>
+        <div class="output">
+  <div class="title">Output area (sink target)</div>
+  <div class="box" id="directOutput">(Run the demo)</div>
+</div>
+
+        <div class="output" style="margin-top:12px;">
+          <div class="title">Debug trace (which source reached the sink?)</div>
+          <div class="box" id="directDebug"></div>
+        </div>
+
+        <div id="directSolution" class="callout" style="margin-top:12px;" hidden>
+          <strong>Solution</strong><br/>
+          <span id="directSolutionText"></span>
+        </div>
+      </div>
+    </div>
+            <div class="card">
+      <div class="pad">
+        <div class="sectionTag"><b>B) Puzzle</b></div>
+        <p class="muted" style="margin-top:10px;">Puzzle: only one field is treated as raw template HTML.</p>
+
+        <div id="lab-warning-puzzle" class="callout warn" hidden></div>
+
+        <form id="puzzleForm">
+          <div class="twoCol">
+            <div>
+  <label for="invoiceNo">Invoice #</label>
+  <input id="invoiceNo" type="text" placeholder="INV-2026-0042" />
+</div>
+<div>
+  <label for="customerName">Customer</label>
+  <input id="customerName" type="text" placeholder="ACME Ltd." />
+</div>
+<div>
+  <label for="lineItems">Line items (CSV)</label>
+  <textarea id="lineItems" placeholder="This is rendered safely."></textarea>
+</div>
+<div>
+  <label for="customBlock">Custom block (HTML template)</label>
+  <textarea id="customBlock" placeholder="Try payload here…"></textarea>
+</div>
+<div>
+          <label for="layout">Layout</label>
+          <select id="layout">
+            <option value="standard">Standard</option>
+<option value="custom">Custom HTML block</option>
+          </select>
+        </div>
+<div>
+  <label for="showLogo"><input id="showLogo" type="checkbox" /> Show logo</label>
+  <div class="small">(decoy)</div>
+</div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="runPuzzleBtn">Run</button>
+            <button type="button" id="resetPuzzleBtn">Reset</button>
+            <button type="button" class="ghost" data-show-solution="puzzleSolution">Show solution</button>
+            <button type="button" class="ghost" data-copy="<img src=x onerror=alert(1)>" data-copystatus="1">Copy suggested payload</button>
+          </div>
+        </form>
+
+        <hr class="sep"/>
+        <div class="output">
+  <div class="title">Output area (sink target)</div>
+  <div class="box" id="puzzleOutput">(Run the demo)</div>
+</div>
+
+        <div class="output" style="margin-top:12px;">
+          <div class="title">Debug trace (which source reached the sink?)</div>
+          <div class="box" id="puzzleDebug"></div>
+        </div>
+
+        <div id="puzzleSolution" class="callout" style="margin-top:12px;" hidden>
+          <strong>Solution</strong><br/>
+          <span id="puzzleSolutionText"></span>
+        </div>
+      </div>
+    </div>
+          </div>
+
+          <div class="card">
+  <div class="pad">
+    <h3>Sink</h3>
+    <div class="callout">
+      <div><strong>Category:</strong> DOM execution → HTML parsing</div>
+      <div><strong>Sink API:</strong> <code>template.innerHTML</code></div>
+      <div><strong>Search in code:</strong> <code>template.innerHTML</code></div>
+      <div><strong>Difficulty:</strong> Easy</div>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Suggested payload</h3>
+    <div class="callout">
+      <div class="small">Templates are parsed as HTML; inserting the cloned content can execute scriptable elements.</div>
+      <pre><code>&lt;img src=x onerror=alert(1)&gt;</code></pre>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Where to look in code</h3>
+    <p class="small">Open the JS file and search for the sink string shown above.</p>
+    <div class="actions">
+      <a class="badge" href="./template-innerhtml.js" target="_blank" rel="noreferrer">Open JS source</a>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Safety note</h3>
+    <p class="small">These pages intentionally contain unsafe code for classroom demos. Do not copy these patterns into real apps.</p>
+  </div>
+</div>
+        </section>
+
+        <footer>
+          <div>Hint: Use “Open JS source” and search for the sink string.</div>
+        </footer>
+      </main>
+
+      <script src="../js/common.js"></script>
+      <script src="./template-innerhtml.js"></script>
+    </body>
+    </html>

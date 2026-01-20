@@ -1,0 +1,218 @@
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>DOM Sink: element.insertAdjacentHTML()</title>
+    <link rel="stylesheet" href="../../style.css" />
+<link rel="stylesheet" href="../../styles.css" />
+<link rel="stylesheet" href="../../css/style.css" />
+<link rel="stylesheet" href="../../assets/style.css" />
+<link rel="stylesheet" href="../../../style.css" />
+<link rel="stylesheet" href="../../../styles.css" />
+<link rel="stylesheet" href="../../../css/style.css" />
+<link rel="stylesheet" href="../../../assets/style.css" />
+<link rel="stylesheet" href="../css/primitive-sinks.css" />
+    </head>
+
+<body class="ps" data-theme="marketing">
+      <div class="topbar">
+        <div class="topbar-inner">
+          <div class="brand">
+            <div class="badge">XSS Demo</div>
+            <h1>JavaScript Sinks Lab</h1>
+          </div>
+          <nav class="navlinks">
+            <a href="../index.html">← Primitive Sinks</a>
+          </nav>
+        </div>
+      </div>
+
+      <main class="container">
+        <section class="card hero">
+          <div class="pad">
+            <div class="appMark"><span class="emoji">📣</span><span class="appName">Campaign Studio</span></div>
+            <h2>DOM Sink: element.insertAdjacentHTML()</h2>
+            <p>DOM execution → HTML parsing • element.insertAdjacentHTML(position, html)</p>
+
+            <div class="case" style="margin-top:12px;">
+              <div class="title"><strong>Use case:</strong> Marketing — Promo Banner Builder</div>
+              <div class="sub">A landing-page editor inserts a “banner snippet” into the page. Only one input is used as raw HTML.</div>
+            </div>
+
+            <div class="kpi" style="margin-top:12px;">
+              <div class="pill">Find the <strong>sink</strong> and trace the <strong>source</strong></div>
+              <div class="pill">DevTools → <strong>Sources</strong></div>
+              <div class="pill">Search for: <code>insertAdjacentHTML</code></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid" style="margin-top:16px;">
+          <div class="stack">
+            <div class="card">
+      <div class="pad">
+        <div class="sectionTag"><b>A) Direct demo</b></div>
+        <p class="muted" style="margin-top:10px;">Direct demo: insert HTML into the banner slot using <code>insertAdjacentHTML</code>.</p>
+
+        <div id="lab-warning-direct" class="callout warn" hidden></div>
+
+        <form id="directForm">
+          <div class="twoCol">
+            <div>
+  <label for="direct_snippet">Banner snippet (HTML)</label>
+  <textarea id="direct_snippet" placeholder="Paste payload…"></textarea>
+</div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="runDirectBtn">Run</button>
+            <button type="button" id="resetDirectBtn">Reset</button>
+            <button type="button" class="ghost" data-show-solution="directSolution">Show solution</button>
+            <button type="button" class="ghost" data-copy="<img src=x onerror=alert(1)>" data-copystatus="1">Copy suggested payload</button>
+          </div>
+        </form>
+
+        <hr class="sep"/>
+        <div class="output">
+  <div class="title">Output area (sink target)</div>
+  <div class="box" id="directAdjContainer">
+    <div class="small muted">Banner slot (new items are appended using <code>insertAdjacentHTML</code>):</div>
+    <ul id="directAdjList" style="margin:10px 0 0 18px;">
+      <li>Welcome banner</li>
+    </ul>
+  </div>
+</div>
+
+        <div class="output" style="margin-top:12px;">
+          <div class="title">Debug trace (which source reached the sink?)</div>
+          <div class="box" id="directDebug"></div>
+        </div>
+
+        <div id="directSolution" class="callout" style="margin-top:12px;" hidden>
+          <strong>Solution</strong><br/>
+          <span id="directSolutionText"></span>
+        </div>
+      </div>
+    </div>
+            <div class="card">
+      <div class="pad">
+        <div class="sectionTag"><b>B) Puzzle</b></div>
+        <p class="muted" style="margin-top:10px;">Puzzle: the banner editor has many fields — only one becomes raw HTML.</p>
+
+        <div id="lab-warning-puzzle" class="callout warn" hidden></div>
+
+        <form id="puzzleForm">
+          <div class="twoCol">
+            <div>
+  <label for="campaign">Campaign name</label>
+  <input id="campaign" type="text" placeholder="Winter Sale" />
+</div>
+<div>
+  <label for="ctaText">CTA text</label>
+  <input id="ctaText" type="text" placeholder="Shop now" />
+</div>
+<div>
+  <label for="ctaUrl">CTA URL</label>
+  <input id="ctaUrl" type="text" placeholder="/shop" />
+</div>
+<div>
+  <label for="bannerSnippet">Banner snippet (HTML)</label>
+  <textarea id="bannerSnippet" placeholder="Try payload here…"></textarea>
+</div>
+<div>
+  <label for="legal">Legal text</label>
+  <textarea id="legal" placeholder="This gets escaped."></textarea>
+</div>
+<div>
+          <label for="placement">Placement</label>
+          <select id="placement">
+            <option value="top">Top</option>
+<option value="sidebar">Sidebar</option>
+<option value="footer">Footer</option>
+          </select>
+        </div>
+<div>
+          <label for="rendering">Rendering</label>
+          <select id="rendering">
+            <option value="text">Text only</option>
+<option value="html">HTML snippet</option>
+          </select>
+        </div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="runPuzzleBtn">Run</button>
+            <button type="button" id="resetPuzzleBtn">Reset</button>
+            <button type="button" class="ghost" data-show-solution="puzzleSolution">Show solution</button>
+            <button type="button" class="ghost" data-copy="<img src=x onerror=alert(1)>" data-copystatus="1">Copy suggested payload</button>
+          </div>
+        </form>
+
+        <hr class="sep"/>
+        <div class="output">
+  <div class="title">Output area (sink target)</div>
+  <div class="box" id="puzzleAdjContainer">
+    <div class="small muted">Banner slot (new items are appended using <code>insertAdjacentHTML</code>):</div>
+    <ul id="puzzleAdjList" style="margin:10px 0 0 18px;">
+      <li>Welcome banner</li>
+    </ul>
+  </div>
+</div>
+
+        <div class="output" style="margin-top:12px;">
+          <div class="title">Debug trace (which source reached the sink?)</div>
+          <div class="box" id="puzzleDebug"></div>
+        </div>
+
+        <div id="puzzleSolution" class="callout" style="margin-top:12px;" hidden>
+          <strong>Solution</strong><br/>
+          <span id="puzzleSolutionText"></span>
+        </div>
+      </div>
+    </div>
+          </div>
+
+          <div class="card">
+  <div class="pad">
+    <h3>Sink</h3>
+    <div class="callout">
+      <div><strong>Category:</strong> DOM execution → HTML parsing</div>
+      <div><strong>Sink API:</strong> <code>element.insertAdjacentHTML(...)</code></div>
+      <div><strong>Search in code:</strong> <code>insertAdjacentHTML</code></div>
+      <div><strong>Difficulty:</strong> Medium</div>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Suggested payload</h3>
+    <div class="callout">
+      <div class="small">Appending attacker-controlled HTML parses it into live DOM.</div>
+      <pre><code>&lt;img src=x onerror=alert(1)&gt;</code></pre>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Where to look in code</h3>
+    <p class="small">Open the JS file and search for the sink string shown above.</p>
+    <div class="actions">
+      <a class="badge" href="./insertadjacenthtml.js" target="_blank" rel="noreferrer">Open JS source</a>
+    </div>
+
+    <hr class="sep"/>
+
+    <h3>Safety note</h3>
+    <p class="small">These pages intentionally contain unsafe code for classroom demos. Do not copy these patterns into real apps.</p>
+  </div>
+</div>
+        </section>
+
+        <footer>
+          <div>Hint: Use “Open JS source” and search for the sink string.</div>
+        </footer>
+      </main>
+
+      <script src="../js/common.js"></script>
+      <script src="./insertadjacenthtml.js"></script>
+    </body>
+    </html>
