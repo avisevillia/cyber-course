@@ -81,9 +81,9 @@
       function apply(prefix, value){
           try{
             // SINK:
-const id = setTimeout(value, 0);
-__timers.push(id);
-SinksLab.setText(prefix + "Status", "Scheduled setTimeout(string).");
+            const id = setTimeout(value, 0);
+            __timers.push(id);
+            SinksLab.setText(prefix + "Status", "Scheduled setTimeout(string).");
           }catch(e){
             const warnId = "lab-warning-" + prefix;
             SinksLab.warn("Error while applying sink: " + e, warnId);

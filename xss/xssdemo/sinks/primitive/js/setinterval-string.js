@@ -86,11 +86,11 @@
       function apply(prefix, value){
           try{
             // SINK:
-const iid = setInterval(value, 100);
-__intervals.push(iid);
-const cid = setTimeout(()=>clearInterval(iid), 140);
-__timers.push(cid);
-SinksLab.setText(prefix + "Status", "Started setInterval(string) (auto-clears).");
+            const iid = setInterval(value, 100);
+            __intervals.push(iid);
+            const cid = setTimeout(()=>clearInterval(iid), 140);
+            __timers.push(cid);
+            SinksLab.setText(prefix + "Status", "Started setInterval(string) (auto-clears).");
           }catch(e){
             const warnId = "lab-warning-" + prefix;
             SinksLab.warn("Error while applying sink: " + e, warnId);
